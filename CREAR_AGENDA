@@ -1,0 +1,74 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
+from tkcalendar import DateEntry
+
+def agregar_evento():
+    fecha = date_entry.get()
+    hora = hora_entry.get()
+    descripcion = descripcion_entry.get()
+    if fecha and hora and descripcion:
+        tree.insert("", "end", values=(fecha, hora, descripcion))
+        limpiar_campos()
+    else:
+        messagebox.showwarning("Campos Vacíos", "Por favor, complete todos los campos.")
+
+def eliminar_evento():
+    selected_item = tree.selection()
+    if selected_item:
+        confirm = messagebox.askyesno("Confirmar Eliminación", "¿Seguro que desea eliminar el evento seleccionado?")
+        if confirm:
+            tree.delete(selected_item)
+    else:
+        messagebox.showwarning("Selección Vacía", "Por favor, seleccione un evento para eliminar.")
+
+def limpiar_campos():
+    date_entry.set_date("")
+    hora_entry.delete(0, tk.END)
+    descripcion_entry.delete(0, tk.END)
+
+root = tk.Tk()
+root.title("Agenda Personal")
+
+frame_input = tk.Frame(root)
+frame_input.pack(pady=10)
+
+# Etiquetas y Entradas
+lbl_fecha = tk.Label(frame_input, text="Fecha:")
+lbl_fecha.grid(row=0, column=0, padx=5, pady=5)
+date_entry = DateEntry(frame_input, width=12, background='darkblue', foreground='white', borderwidth=2)
+date_entry.grid(row=0, column=1, padx=5, pady=5)
+
+lbl_hora = tk.Label(frame_input, text="Hora:")
+lbl_hora.grid(row=0, column=2, padx=5, pady=5)
+hora_entry = tk.Entry(frame_input)
+hora_entry.grid(row=0, column=3, padx=5, pady=5)
+
+lbl_descripcion = tk.Label(frame_input, text="Descripción:")
+lbl_descripcion.grid(row=0, column=4, padx=5, pady=5)
+descripcion_entry = tk.Entry(frame_input, width=30)
+descripcion_entry.grid(row=0, column=5, padx=5, pady=5)
+
+# Botones
+frame_buttons = tk.Frame(root)
+frame_buttons.pack(pady=10)
+
+btn_agregar = tk.Button(frame_buttons, text="Agregar Evento", command=agregar_evento)
+btn_agregar.pack(side=tk.LEFT, padx=5)
+
+btn_eliminar = tk.Button(frame_buttons, text="Eliminar Evento", command=eliminar_evento)
+btn_eliminar.pack(side=tk.LEFT, padx=5)
+
+btn_salir = tk.Button(frame_buttons, text="Salir", command=root.quit)
+btn_salir.pack(side=tk.LEFT, padx=5)
+
+# TreeView
+frame_tree = tk.Frame(root)
+frame_tree.pack(pady=10)
+
+tree = ttk.Treeview(frame_tree, columns=("Fecha", "Hora", "Descripción"), show="headings")
+tree.heading("Fecha", text="Fecha")
+tree.heading("Hora", text="Hora")
+tree.heading("Descripción", text="Descripción")
+tree.pack()
+
+root.mainloop()
